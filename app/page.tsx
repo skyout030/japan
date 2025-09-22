@@ -23,40 +23,27 @@ const routes = [
 ];
 
 // 呼叫本地 API Proxy
-async function fetchNextTransitRoute(origin, destination) {
-  try {
-    // 設定出發時間為現在
-    const departureTime = Math.floor(Date.now() / 1000);
+async function fetchNextTransitRoute(origin: string, destination: string) {
+  const departureTime = Math.floor(Date.now() / 1000);
 
-    const res = await fetch(
-      `/api/directions?origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}&departure_time=${departureTime}`
-    );
-    const data = await res.json();
+  const res = await fetch(
+    `/api/directions?origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}&departure_time=${departureTime}`
+  );
 
-    if (!data.routes || data.routes.length === 0) {
-      return { times: [], fare: "無資料", duration: "N/A" };
-    }
+  const data = await res.json();
 
-    // 取得第一條路線的第一段 legs
-    const route = data.routes[0].legs[0];
-
-    // 取得下一班可搭乘時間
-    const nextTime = route.departure_time?.text || "N/A";
-
-    // 票價與時間
-    const fare = route?.fare?.text || "查詢中";
-    const duration = route.duration?.text || "N/A";
-
-    return {
-      times: [nextTime],
-      fare,
-      duration,
-    };
-  } catch (err) {
-    console.error("Google Directions API error:", err);
-    return { times: [], fare: "錯誤", duration: "N/A" };
+  if (!data.routes || data.routes.length === 0) {
+    return { times: [], fare: "無資料", duration: "N/A" };
   }
+
+  const route = data.routes[0].legs[0];
+  const nextTime = route.departure_time?.text || "N/A";
+  const fare = route?.fare?.text || "查詢中";
+  const duration = route.duration?.text || "N/A";
+
+  return { times: [nextTime], fare, duration };
 }
+
 
 
 export default function TransitApp() {
