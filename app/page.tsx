@@ -1,109 +1,103 @@
-import React, { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Clock, Train, Bus } from "lucide-react";
+import Image from "next/image";
 
-// 模擬行程資料
-const routes = [
-  {
-    date: "9/27",
-    from: "成田",
-    to: "日暮里",
-    type: "train",
-    line: "Skyliner",
-    duration: "36 分",
-    fare: "¥5810",
-    schedule: ["09:15", "09:45", "10:15", "10:45"],
-  },
-  {
-    date: "9/28",
-    from: "上野",
-    to: "軽井沢",
-    type: "train",
-    line: "北陸新幹線",
-    duration: "65 分",
-    fare: "¥5810",
-    schedule: ["08:20", "08:40", "09:00", "09:20"],
-  },
-  {
-    date: "9/30",
-    from: "新島々",
-    to: "上高地",
-    type: "bus",
-    line: "上高地巴士",
-    duration: "1 小時",
-    fare: "現場購票",
-    schedule: ["07:30", "08:00", "08:30", "09:00"],
-  },
-];
-
-// （未來可換成 Google Routes API）
-async function fetchNextTransitRoute(origin, destination) {
-  // 假資料模擬 API
-  return {
-    times: ["10:00", "10:30", "11:00"],
-    fare: "¥2000",
-    duration: "1 小時",
-  };
-}
-
-export default function TransitApp() {
-  const [selected, setSelected] = useState(null);
-  const [realtime, setRealtime] = useState(null);
-
-  async function handleRealtime(r) {
-    const data = await fetchNextTransitRoute(r.from, r.to);
-    setRealtime(data);
-  }
-
+export default function Home() {
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
-      <h1 className="text-2xl font-bold text-center mb-6">旅行交通速查表</h1>
+    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
+      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
+        <Image
+          className="dark:invert"
+          src="/next.svg"
+          alt="Next.js logo"
+          width={180}
+          height={38}
+          priority
+        />
+        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
+          <li className="mb-2 tracking-[-.01em]">
+            Get started by editing{" "}
+            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
+              app/page.tsx
+            </code>
+            .
+          </li>
+          <li className="tracking-[-.01em]">
+            Save and see your changes instantly.
+          </li>
+        </ol>
 
-      {/* 行程列表 */}
-      <div className="grid gap-4">
-        {routes.map((r, idx) => (
-          <Card key={idx} className="shadow-md cursor-pointer" onClick={() => {setSelected(r); setRealtime(null);}}>
-            <CardContent className="p-4 flex justify-between items-center">
-              <div>
-                <p className="font-bold">📅 {r.date}</p>
-                <p>{r.from} → {r.to}</p>
-                <p className="text-sm text-gray-600">{r.line} • {r.duration}</p>
-              </div>
-              <div className="text-right">
-                <p className="font-semibold">{r.fare}</p>
-                {r.type === "train" ? <Train className="inline ml-2" /> : <Bus className="inline ml-2" />}
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      {/* 即時班次查詢 */}
-      {selected && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-          <Card className="w-80 bg-white shadow-lg">
-            <CardContent className="p-4">
-              <h2 className="text-lg font-bold mb-2">{selected.from} → {selected.to}</h2>
-              <p className="mb-1">🚄 路線：{selected.line}</p>
-              <p className="mb-1">⏱ 耗時：{selected.duration}</p>
-              <p className="mb-3">💴 費用：{selected.fare}</p>
-
-              <p className="font-semibold mb-2 flex items-center"><Clock className="w-4 h-4 mr-1" /> 班次資訊</p>
-              <ul className="list-disc ml-6 text-gray-700">
-                {(realtime ? realtime.times : selected.schedule).map((time, idx) => (
-                  <li key={idx}>{time}</li>
-                ))}
-              </ul>
-
-              <div className="flex justify-between mt-4">
-                <Button onClick={() => handleRealtime(selected)}>查即時班次</Button>
-                <Button variant="secondary" onClick={() => setSelected(null)}>關閉</Button>
-              </div>
-            </CardContent>
-          </Card>
+        <div className="flex gap-4 items-center flex-col sm:flex-row">
+          <a
+            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
+            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Image
+              className="dark:invert"
+              src="/vercel.svg"
+              alt="Vercel logomark"
+              width={20}
+              height={20}
+            />
+            Deploy now
+          </a>
+          <a
+            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
+            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Read our docs
+          </a>
         </div>
-      )}
+      </main>
+      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
+        <a
+          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Image
+            aria-hidden
+            src="/file.svg"
+            alt="File icon"
+            width={16}
+            height={16}
+          />
+          Learn
+        </a>
+        <a
+          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Image
+            aria-hidden
+            src="/window.svg"
+            alt="Window icon"
+            width={16}
+            height={16}
+          />
+          Examples
+        </a>
+        <a
+          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Image
+            aria-hidden
+            src="/globe.svg"
+            alt="Globe icon"
+            width={16}
+            height={16}
+          />
+          Go to nextjs.org →
+        </a>
+      </footer>
     </div>
   );
 }
